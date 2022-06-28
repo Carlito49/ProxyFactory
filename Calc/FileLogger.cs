@@ -3,7 +3,7 @@ using System;
 
 namespace Calc
 {
-    public class FileLogger : IDisposable
+    public class FileLogger : ILogger, IDisposable
     {
         private StreamWriter _writer;
 
@@ -15,6 +15,13 @@ namespace Calc
         public void Dispose()
         {
             _writer.Dispose();
+        }
+
+        public void WriteLog(string message)
+        {
+            _writer.WriteLine(message);
+            _writer.Close();
+            Dispose();
         }
     }
 }

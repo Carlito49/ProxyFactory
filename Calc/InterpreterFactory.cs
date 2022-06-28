@@ -4,14 +4,14 @@ namespace Calc
 {
     public class InterpreterFactory
     {
-        public static Interpreter CreateInterpreter()
+        public static Interpreter CreateInterpreter(ILogger logger)
         {
             if (ConfigurationManager.AppSettings["Log"].Contains("True")) 
             {
-                return new LogInterpreter();
+                return new LogInterpreter(logger);
 
             }
-            return new Interpreter();
+            return new Interpreter(logger);
         }
     }
 }

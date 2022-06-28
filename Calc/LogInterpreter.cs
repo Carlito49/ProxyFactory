@@ -8,7 +8,7 @@ namespace Calc
     {
         private StreamWriter _logWritter;
 
-        public LogInterpreter()
+        public LogInterpreter(ILogger logger) : base(logger)
         {
             _logWritter = new("log.txt");
         }
@@ -22,12 +22,14 @@ namespace Calc
         {
             base.Visit(operation);
             _logWritter.WriteLine(operation.ToString());
+            _logWritter.Close();
         }
 
         public override void Visit(Constant constant)
         {
             base.Visit(constant);
             _logWritter.WriteLine(constant.ToString());
+            _logWritter.Close();
         }
     }
 }

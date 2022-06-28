@@ -11,7 +11,7 @@ namespace Calc.Launcher
             using (var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((_, services) => {
                 services.AddTransient<IInterpreter, Interpreter>();
-                services.AddSingleton<FileLogger>();
+                services.AddSingleton<ILogger, FileLogger>();
             })
             .Build()
             )

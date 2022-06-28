@@ -15,8 +15,6 @@ namespace Calc
 
         public int Result => _stack.Pop();
 
-        public Interpreter() {}
-
         public Interpreter(ILogger logger)
         {
             _logger = logger;
@@ -56,7 +54,7 @@ namespace Calc
 
         public int Interpret(string expression)
         {
-            var interpreter = InterpreterFactory.CreateInterpreter();
+            var interpreter = InterpreterFactory.CreateInterpreter(_logger);
             var ast = new Parser().Parse(new Tokenizer().Tokenize(expression));
             ast.Accept(interpreter);
             _logger.WriteLog(expression);
