@@ -6,7 +6,11 @@ namespace Calc
     {
         public static Interpreter CreateInterpreter()
         {
-            if (ConfigurationManager.AppSettings["Log"].Contains("True")) return new LogInterpreter();
+            if (ConfigurationManager.AppSettings["Log"].Contains("True")) 
+            {
+                return new LogInterpreter();
+
+            }
             return new Interpreter();
         }
     }

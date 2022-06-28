@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Calc.Launcher
 {
@@ -6,17 +8,20 @@ namespace Calc.Launcher
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0)
+            using (var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices((_, services) => {
+                services.AddTransient<IInterpreter, Interpreter>();
+                services.AddSingleton<FileLogger>();
+            })
+            .Build()
+            )
             {
-                Console.WriteLine("You must provide a command line argument.");
-                return;
+                using (var serviceScope = host.Services.CreateScope())
+                {
+                    var calc = new ConsoleCalc(serviceScope.ServiceProvider.GetRequiredService<IInterpreter>());
+                    calc.Run(args[0]);
+                }
             }
-
-            var interpreter = InterpreterFactory.CreateInterpreter();
-            var ast = new Parser().Parse(new Tokenizer().Tokenize(args[0]));
-            ast.Accept(interpreter);
-            Console.WriteLine(interpreter.Result);
-            interpreter.Dispose();
         }
     }
 }

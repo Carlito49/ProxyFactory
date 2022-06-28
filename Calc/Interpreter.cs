@@ -7,11 +7,20 @@ using System.Threading.Tasks;
 
 namespace Calc
 {
-    public class Interpreter : IVisitor, IDisposable
+    public class Interpreter : IVisitor, IDisposable, IInterpreter
     {
         private readonly Stack<int> _stack = new Stack<int>();
 
+        private ILogger _logger;
+
         public int Result => _stack.Pop();
+
+        public Interpreter() {}
+
+        public Interpreter(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public virtual void Visit(ArithmeticOperation operation)
         {
@@ -43,6 +52,16 @@ namespace Calc
         public void Dispose()
         {
 
+        }
+
+        public int Interpret(string expression)
+        {
+            var interpreter = InterpreterFactory.CreateInterpreter();
+            var ast = new Parser().Parse(new Tokenizer().Tokenize(expression));
+            ast.Accept(interpreter);
+            _logger.WriteLog(expression);
+            _logger.WriteLog(interpreter.Result.ToString());
+            return interpreter.Result;
         }
     }
 }
